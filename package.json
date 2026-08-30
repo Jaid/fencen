@@ -26,5 +26,6 @@
     "typescript": "npm:typescript-classic@6.0.4"
   },
   "funding": "https://github.com/sponsors/Jaid",
-  "license": "MIT"
+  "license": "MIT",
+  "description": "safe and simple utilities for wrapping code in Markdown-style fences"
 }
