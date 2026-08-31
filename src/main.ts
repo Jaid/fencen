@@ -2,16 +2,15 @@ import {pickFence} from '#src/pickFence.ts'
 
 export {default as blockFences} from '#src/blockFences.ts'
 export {default as inlineFences} from '#src/inlineFences.ts'
-export type {Fence, FencePayload} from '#src/lib/types/Fence.ts'
 export {pickFence} from '#src/pickFence.ts'
 
-export type TrimOptions = {
+type TrimOptions = {
   indentation?: boolean
   lines?: boolean
   vertical?: boolean
 } | boolean
 
-export type Options = {
+type Options = {
   inline?: 'auto' | boolean
   language?: string
   trim?: TrimOptions
@@ -102,6 +101,9 @@ const trimInput = (input: string, options: TrimOptions = true) => {
   return lines.map(line => line.content + line.lineBreak).join('')
 }
 const shouldUseInlineFence = (input: string, inline: Options['inline'], language?: string) => {
+  if (language) {
+    return false
+  }
   if (inline === 'auto') {
     return !lineBreakSearchPattern.test(input)
   }
@@ -114,6 +116,18 @@ const fencen = (input: string, options: Options = {}) => {
   const opener = fence.opener({language: options.language})
   const closer = fence.closer()
   return `${opener}${content}${closer}`
+}
+fencen.inline = (input: string, options: Exclude<Options, 'inline'> = {}) => {
+  return fencen(input, {
+    ...options,
+    inline: true,
+  })
+}
+fencen.block = (input: string, options: Exclude<Options, 'inline'> = {}) => {
+  return fencen(input, {
+    ...options,
+    inline: false,
+  })
 }
 
 export default fencen
